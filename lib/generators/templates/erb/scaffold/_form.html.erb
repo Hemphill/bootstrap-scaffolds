@@ -1,0 +1,62 @@
+<%%= form_for(<%= singular_table_name %>) do |f| %>
+  <%% if <%= singular_table_name %>.errors.any? %>
+    <div id="error-explanation" class="alert alert-danger" role="alert">
+      <h2><%%= pluralize(<%= singular_table_name %>.errors.count, "error") %> prohibited this <%= singular_table_name %> from being saved:</h2>
+
+      <ul>
+      <%% <%= singular_table_name %>.errors.full_messages.each do |message| %>
+        <li><%%= message %></li>
+      <%% end %>
+      </ul>
+    </div>
+  <%% end %>
+
+<% attributes.each do |attribute| -%>
+<% if attribute.password_digest? -%>
+  <div class="form-group">
+    <%%= f.label :password %>
+    <%%= f.password_field :password, class: 'form-control' %>
+    <!-- aria-describedby="password_help"
+    <p><small id="password_help" class="form-text text-muted"></small></p> -->
+  </div>
+
+  <div class="form-group">
+    <%%= f.label :password_confirmation %>
+    <%%= f.password_field :password_confirmation %>
+    <!-- aria-describedby="password_confirmation_help"
+    <p><small id="password_confirmation_help" class="form-text text-muted"></small></p> -->
+  </div>
+
+<% elsif attribute.field_type == 'check_box' -%>
+  <div class="checkbox">
+    <label>
+      <%%= f.<%= attribute.field_type %> :<%= attribute.column_name %> %>
+      <%= attribute.column_name %>
+    </label>
+    <!-- aria-describedby="<%= attribute.column_name %>_help"
+    <p><small id="<%= attribute.column_name %>_help" class="form-text text-muted"></small></p> -->
+  </div>
+
+  <% elsif attribute.field_type.to_s == 'text_area' -%>
+    <div class="form-group">
+      <%%= f.label :<%= attribute.column_name %> %>
+      <%%= f.<%= attribute.field_type %> :<%= attribute.column_name %>, rows: '5', class: 'form-control' %>
+      <!-- aria-describedby="<%= attribute.column_name %>_help"
+    <p><small id="<%= attribute.column_name %>_help" class="form-text text-muted"></small></p> -->
+    </div>
+
+<% else -%>
+  <div class="form-group">
+    <%%= f.label :<%= attribute.column_name %> %>
+    <%%= f.<%= attribute.field_type %> :<%= attribute.column_name %>, class: 'form-control' %>
+    <!-- aria-describedby="<%= attribute.column_name %>_help"
+    <p><small id="<%= attribute.column_name %>_help" class="form-text text-muted"></small></p> -->
+  </div>
+
+<% end -%>
+<% end -%>
+  <div class="form-actions d-inline-block pull-xs-right">
+    <%%= link_to 'Cancel', <%= index_helper %>_path, class: 'btn btn-secondary' %>
+    <%%= f.submit class: 'btn btn-primary' %>
+  </div>
+<%% end %>
